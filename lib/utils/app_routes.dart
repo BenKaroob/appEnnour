@@ -6,6 +6,11 @@ import '../pages/course_detail_page.dart';
 import '../pages/quiz_page.dart';
 import '../pages/profile_page.dart';
 import '../pages/splash_screen.dart';
+import '../pages/admin/admin_login_page.dart';
+import '../pages/admin/admin_dashboard_page.dart';
+import '../pages/admin/admin_users_page.dart';
+import '../pages/admin/admin_user_form_page.dart';
+import '../pages/admin/admin_user_detail_page.dart';
 
 // Gestionnaire des routes de l'application
 class AppRoutes {
@@ -18,12 +23,20 @@ class AppRoutes {
   static const String quiz = '/quiz';
   static const String profile = '/profile';
 
+  // Routes pour l'administration
+  static const String adminLogin = '/admin/login';
+  static const String adminDashboard = '/admin/dashboard';
+  static const String adminUsers = '/admin/users';
+  static const String adminUserForm = '/admin/users/form';
+  static const String adminUserDetail = '/admin/users/detail';
+
   // Route initiale
   static const String initialRoute = splash;
 
   // Générateur de routes pour MaterialApp
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+    // Routes utilisateur
       case splash:
         return MaterialPageRoute(builder: (_) => const SplashScreen());
 
@@ -68,6 +81,32 @@ class AppRoutes {
       case profile:
         return MaterialPageRoute(builder: (_) => const ProfilePage());
 
+    // Routes d'administration
+      case adminLogin:
+        return MaterialPageRoute(builder: (_) => const AdminLoginPage());
+
+      case adminDashboard:
+        return MaterialPageRoute(builder: (_) => const AdminDashboardPage());
+
+      case adminUsers:
+        return MaterialPageRoute(builder: (_) => const AdminUsersPage());
+
+      case adminUserForm:
+        final args = settings.arguments as Map<String, dynamic>?;
+        final user = args?['user'];
+
+        return MaterialPageRoute(
+          builder: (_) => AdminUserFormPage(user: user),
+        );
+
+      case adminUserDetail:
+        final args = settings.arguments as Map<String, dynamic>?;
+        final userId = args?['userId'] as String? ?? '';
+
+        return MaterialPageRoute(
+          builder: (_) => AdminUserDetailPage(userId: userId),
+        );
+
       default:
       // Route par défaut en cas d'erreur
         return MaterialPageRoute(
@@ -111,6 +150,33 @@ class AppRoutes {
       arguments: {
         'courseId': courseId,
         'quizId': quizId,
+      },
+    );
+  }
+
+  // Méthode d'aide pour la navigation vers l'administration
+  static void navigateToAdminLogin(BuildContext context) {
+    Navigator.pushNamed(context, adminLogin);
+  }
+
+  // Méthode d'aide pour la navigation vers le détail d'un utilisateur
+  static void navigateToAdminUserDetail(BuildContext context, String userId) {
+    Navigator.pushNamed(
+      context,
+      adminUserDetail,
+      arguments: {
+        'userId': userId,
+      },
+    );
+  }
+
+  // Méthode d'aide pour la navigation vers le formulaire d'utilisateur
+  static void navigateToAdminUserForm(BuildContext context, {dynamic user}) {
+    Navigator.pushNamed(
+      context,
+      adminUserForm,
+      arguments: {
+        'user': user,
       },
     );
   }

@@ -20,6 +20,10 @@ class _LoginPageState extends State<LoginPage> {
   bool _obscurePassword = true;
   String? _errorMessage;
 
+  // Compteur pour accès administrateur via tapotements
+  int _adminTapCount = 0;
+  final int _requiredTaps = 3;
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -68,6 +72,17 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  // Méthode pour gérer les tapotements pour accéder à l'admin
+  void _incrementAdminTapCount() {
+    setState(() {
+      _adminTapCount++;
+      if (_adminTapCount >= _requiredTaps) {
+        _adminTapCount = 0;
+        Navigator.pushNamed(context, AppRoutes.adminLogin);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,8 +95,11 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Logo et bismillah
-                const AnimatedBismillahHeader(),
+                // Logo et bismillah avec détecteur de tapotements pour admin
+                GestureDetector(
+                  onTap: _incrementAdminTapCount,
+                  child: const AnimatedBismillahHeader(),
+                ),
                 const SizedBox(height: 32),
 
                 // Titre
@@ -235,8 +253,46 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                 ),
+
+                // Lien d'accès à l'administration
+                Padding(
+                  padding: const EdgeInsets.only(top: 24.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, AppRoutes.adminLogin);
+                        },
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.grey[500],
+                        ),
+                        child: const Text(
+                          'Accès administration',
+                          style: TextStyle(
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
+          ),
+        ),
+      ),
+      // Ajout d'une note d'information sur les tapotements (optionnel)
+      bottomNavigationBar: Container(
+        height: 24,
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        color: Colors.transparent,
+        alignment: Alignment.center,
+        child: Text(
+          'Tapez ${_requiredTaps - _adminTapCount} fois sur le logo pour accéder à l\'administration',
+          style: TextStyle(
+            color: Colors.grey[400],
+            fontSize: 10,
           ),
         ),
       ),

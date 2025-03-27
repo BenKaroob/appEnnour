@@ -7,6 +7,9 @@ import 'pages/course_list_page.dart';
 import 'pages/course_detail_page.dart';
 import 'pages/quiz_page.dart';
 import 'pages/profile_page.dart';
+import 'pages/admin/admin_login_page.dart';
+import 'pages/admin/admin_dashboard_page.dart';
+import 'pages/admin/admin_users_page.dart';
 
 void main() {
   runApp(const MyApp());

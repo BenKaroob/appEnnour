@@ -9,7 +9,7 @@ import 'admin_categories_page.dart';
 import 'admin_admins_page.dart';
 import 'admin_activity_page.dart';
 import 'admin_statistics_page.dart';
-
+import 'admin_quizzes_page.dart';
 class AdminDashboardPage extends StatefulWidget {
   const AdminDashboardPage({Key? key}) : super(key: key);
 
@@ -489,6 +489,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
             ),
             const SizedBox(height: 16),
 
+            // Dans la grille des options du menu (GridView.count)
             GridView.count(
               crossAxisCount: 2,
               crossAxisSpacing: 16,
@@ -501,7 +502,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                     'Cours',
                     'Gérer les cours et leur contenu',
                     Icons.book,
-                        () => _navigateTo(const AdminCourseFormPage(isEditing: true,)),
+                        () => _navigateTo(const AdminCourseFormPage(isEditing: false)), // Utiliser cette page en attendant
                   ),
                 if (_admin!.hasPermission('read:user'))
                   _buildMenuCard(
@@ -509,6 +510,14 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                     'Gérer les comptes utilisateurs',
                     Icons.people,
                         () => _navigateTo(const AdminUsersPage()),
+                  ),
+                // AJOUTEZ CETTE CARTE POUR LES QUIZ
+                if (_admin!.hasPermission('read:course'))
+                  _buildMenuCard(
+                    'Quiz',
+                    'Gérer les quiz des cours',
+                    Icons.quiz,
+                        () => _navigateTo(const AdminQuizzesPage()),
                   ),
                 if (_admin!.hasPermission('read:category'))
                   _buildMenuCard(
