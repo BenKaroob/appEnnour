@@ -33,6 +33,7 @@ class AppConstants {
   static const Duration animationDuration = Duration(milliseconds: 300);
 
   // Taille des éléments UI
+  static const double borderRadius = 8.0;  // Utilisé dans SearchFilterBar et autres widgets
   static const double cardBorderRadius = 12.0;
   static const double buttonBorderRadius = 8.0;
   static const double defaultPadding = 16.0;
@@ -52,6 +53,42 @@ class AppConstants {
     'school': Icons.school,
   };
 
+  // Rôles administrateur
+  static const Map<String, String> adminRoles = {
+    'super_admin': 'Super Administrateur',
+    'course_admin': 'Administrateur de cours',
+    'content_manager': 'Gestionnaire de contenu',
+  };
+
+  // Types d'action pour les logs d'activité
+  static const Map<String, String> actionTypes = {
+    'create': 'Création',
+    'update': 'Modification',
+    'delete': 'Suppression',
+    'login': 'Connexion',
+    'logout': 'Déconnexion',
+  };
+
+  // Types de cible pour les logs d'activité
+  static const Map<String, String> targetTypes = {
+    'course': 'Cours',
+    'lesson': 'Leçon',
+    'quiz': 'Quiz',
+    'user': 'Utilisateur',
+    'category': 'Catégorie',
+    'admin': 'Administrateur',
+    'system': 'Système',
+  };
+
+  // Couleurs pour les actions dans les logs d'activité
+  static const Map<String, Color> actionColors = {
+    'create': Color(0xFF4CAF50),  // Vert
+    'update': Color(0xFF2196F3),  // Bleu
+    'delete': Color(0xFFF44336),  // Rouge
+    'login': Color(0xFF9C27B0),   // Violet
+    'logout': Color(0xFF607D8B),  // Bleu-gris
+  };
+
   // Fonction pour déterminer le message de résultat du quiz en fonction du score
   static String getQuizResultMessage(int score) {
     if (score >= 90) {
@@ -68,5 +105,25 @@ class AppConstants {
   // Fonction pour traduire le niveau du cours
   static String translateCourseLevel(String level) {
     return courseLevels[level] ?? 'Inconnu';
+  }
+
+  // Fonction pour traduire le rôle d'administrateur
+  static String translateAdminRole(String role) {
+    return adminRoles[role] ?? role;
+  }
+
+  // Fonction pour traduire le type d'action
+  static String translateActionType(String action) {
+    return actionTypes[action] ?? action;
+  }
+
+  // Fonction pour traduire le type de cible
+  static String translateTargetType(String targetType) {
+    return targetTypes[targetType] ?? targetType;
+  }
+
+  // Fonction pour obtenir la couleur d'une action
+  static Color getActionColor(String action) {
+    return actionColors[action] ?? Colors.grey;
   }
 }

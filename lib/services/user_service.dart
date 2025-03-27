@@ -18,6 +18,147 @@ class UserService {
     return _authService.currentUser;
   }
 
+  // Récupérer tous les utilisateurs
+  Future<List<User>> getAllUsers() async {
+    // Simuler un délai réseau
+    await Future.delayed(const Duration(milliseconds: 800));
+    return _mockDataService.users;
+  }
+
+  // Récupérer un utilisateur par son ID
+  Future<User> getUserById(String userId) async {
+    // Simuler un délai réseau
+    await Future.delayed(const Duration(milliseconds: 500));
+    final user = _mockDataService.findUserById(userId);
+    if (user == null) {
+      throw Exception('Utilisateur non trouvé');
+    }
+    return user;
+  }
+
+  // Mettre à jour le statut d'un utilisateur (actif/inactif)
+  Future<User> updateUserStatus(String userId, bool isActive) async {
+    // Simuler un délai réseau
+    await Future.delayed(const Duration(milliseconds: 800));
+
+    // Trouver l'index de l'utilisateur
+    final index = _mockDataService.users.indexWhere((u) => u.id == userId);
+    if (index == -1) {
+      throw Exception('Utilisateur non trouvé');
+    }
+
+    // Mettre à jour le statut de l'utilisateur
+    final updatedUser = _mockDataService.users[index].copyWith(isActive: isActive);
+    _mockDataService.users[index] = updatedUser;
+
+    // Si c'est l'utilisateur actuel, mettre à jour également dans authService
+    final currentUser = _authService.currentUser;
+    if (currentUser != null && currentUser.id == userId) {
+      _authService.updateCurrentUser(updatedUser);
+    }
+
+    return updatedUser;
+  }
+
+  // Créer un nouvel utilisateur
+  Future<User> createUser(User user, String password) async {
+    // Simuler un délai réseau
+    await Future.delayed(const Duration(milliseconds: 1000));
+
+    // Vérifier si l'email existe déjà
+    final existingUser = _mockDataService.findUserByEmail(user.email);
+    if (existingUser != null) {
+      throw Exception('Un utilisateur avec cet email existe déjà');
+    }
+
+    // Générer un ID si nécessaire
+    final newUser = user.id.isEmpty
+        ? user.copyWith(id: 'user-${DateTime.now().millisecondsSinceEpoch}')
+        : user;
+
+    // Ajouter l'utilisateur aux données mockées
+    _mockDataService.users.add(newUser);
+
+    // Dans une vraie application, le mot de passe serait haché et stocké de manière sécurisée
+    // TODO: Implémenter le hachage de mot de passe
+
+    return newUser;
+  }
+
+  // Mettre à jour un utilisateur existant
+  Future<User> updateUser(User user) async {
+    // Simuler un délai réseau
+    await Future.delayed(const Duration(milliseconds: 800));
+
+    // Trouver l'index de l'utilisateur
+    final index = _mockDataService.users.indexWhere((u) => u.id == user.id);
+    if (index == -1) {
+      throw Exception('Utilisateur non trouvé');
+    }
+
+    // Mettre à jour l'utilisateur
+    _mockDataService.users[index] = user;
+
+    // Si c'est l'utilisateur actuel, mettre à jour également dans authService
+    final currentUser = _authService.currentUser;
+    if (currentUser != null && currentUser.id == user.id) {
+      _authService.updateCurrentUser(user);
+    }
+
+    return user;
+  }
+
+  // Mettre à jour le mot de passe d'un utilisateur
+  Future<bool> updateUserPassword(String userId, String newPassword) async {
+    // Simuler un délai réseau
+    await Future.delayed(const Duration(milliseconds: 700));
+
+    // Trouver l'utilisateur
+    final index = _mockDataService.users.indexWhere((u) => u.id == userId);
+    if (index == -1) {
+      throw Exception('Utilisateur non trouvé');
+    }
+
+    // Dans une vraie application, le mot de passe serait haché et stocké de manière sécurisée
+    // TODO: Implémenter le hachage de mot de passe
+
+    return true;
+  }
+
+  // Supprimer un utilisateur
+  Future<bool> deleteUser(String userId) async {
+    // Simuler un délai réseau
+    await Future.delayed(const Duration(milliseconds: 800));
+
+    // Trouver l'index de l'utilisateur
+    final index = _mockDataService.users.indexWhere((u) => u.id == userId);
+    if (index == -1) {
+      return false;
+    }
+
+    // Supprimer l'utilisateur
+    _mockDataService.users.removeAt(index);
+
+    return true;
+  }
+
+  // Réinitialiser le mot de passe d'un utilisateur
+  Future<bool> resetUserPassword(String userId) async {
+    // Simuler un délai réseau
+    await Future.delayed(const Duration(milliseconds: 600));
+
+    // Trouver l'utilisateur
+    final index = _mockDataService.users.indexWhere((u) => u.id == userId);
+    if (index == -1) {
+      throw Exception('Utilisateur non trouvé');
+    }
+
+    // Dans une vraie application, un email de réinitialisation serait envoyé
+    // ou un mot de passe temporaire serait généré
+
+    return true;
+  }
+
   // Récupère la progression globale de l'utilisateur
   Future<double> getUserOverallProgress() async {
     final user = _authService.currentUser;
@@ -61,7 +202,7 @@ class UserService {
 
     // Créer un utilisateur mis à jour
     final updatedUser = user.copyWith(
-      name: name ?? user.name,
+      firstName: name ?? user.firstName,
       profileImageUrl: profileImageUrl ?? user.profileImageUrl,
     );
 
