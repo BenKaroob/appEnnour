@@ -241,7 +241,9 @@ class UserService {
     final completedCourses = List<String>.from(user.completedCourseIds);
     if (!completedCourses.contains(courseId)) {
       completedCourses.add(courseId);
-      // TODO: Dans une vraie application, cette mise à jour serait envoyée au backend
+      final updatedUser = user.copyWith(completedCourseIds: completedCourses);
+      _mockDataService.users[userIndex] = updatedUser;
+      await _authService.updateCurrentUser(updatedUser);
     }
 
     return true;
