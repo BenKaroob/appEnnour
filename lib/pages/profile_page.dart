@@ -1,3 +1,4 @@
+import 'package:app_ennour/pages/settings_page.dart';
 import 'package:flutter/material.dart';
 import '../models/index.dart';
 import '../services/index.dart';
@@ -103,7 +104,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     // Créer les initiales pour l'avatar si pas d'image
     final initials = _user!.name.isNotEmpty
-        ? _user!.name.split(' ').map((e) => e[0]).take(2).join()
+        ? _user!.name.split(' ').where((e) => e.isNotEmpty).map((e) => e[0]).take(2).join()
         : '?';
 
     // Couleur générée à partir du nom
@@ -492,10 +493,23 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
-      appBar: CustomAppBar(
-        title: 'Mon profil',
-        showBackButton: true,
+      appBar: AppBar(
+        title: const Text('Mon profil'),
+        automaticallyImplyLeading: false,
         actions: [
+          Builder(
+            builder: (context) => IconButton(
+              icon: const Icon(Icons.settings),
+              tooltip: 'Paramètres',
+              onPressed: () {
+                print('Settings button pressed');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SettingsPage()),
+                );
+              },
+            ),
+          ),
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: _handleLogout,
@@ -535,6 +549,22 @@ class _ProfilePageState extends State<ProfilePage> {
 
             // Cours complétés
             _buildCompletedCourses(),
+
+            // TEST VISIBILITÉ WEB
+            Container(
+              color: Colors.red,
+              height: 50,
+              child: const Center(child: Text('TEST WEB', style: TextStyle(color: Colors.white))),
+            ),
+
+            // Paramètres (version ultra-simple pour test web)
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('PARAM TEST'),
+              onTap: () {
+                print('PARAM TEST PRESSED');
+              },
+            ),
 
             // Espace en bas pour le scroll
             const SizedBox(height: 32),
